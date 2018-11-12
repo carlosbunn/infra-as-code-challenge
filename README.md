@@ -20,7 +20,7 @@ The goals of the challenge are:
 
 * Provision an instance from scratch using Terraform on a cloud provider of your choice (Digital Ocean or AWS);
 * Install and configure a CI/CD tool of your choice in this new VM using Ansible;
-* Configure a push deploy pipeline on the CI/CD tool with these repositories:
+* Configure a push deploy pipeline with the CI/CD tool with these repositories:
   * https://github.com/devgrid/calculator-service
   * https://github.com/devgrid/calculator-service-test
 
