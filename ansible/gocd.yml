@@ -10,9 +10,16 @@
                   args: 
                         executable: /bin/bash
 
-                - apt_repository:
-                        repo: deb https://download.gocd.org /
-                        state: present
+                - name: Copy go-cd repository
+                  copy:
+                    src: ../resources/gocd.list
+                    dest: /etc/apt/sources.list.d/gocd.list
+                    owner: root
+                    group: root
+                    mode: '0644'
+
+                - name: Fix apt
+                  command: apt clean
 
                 - name: Add gocd repo key
                   apt_key:
@@ -45,7 +52,7 @@
 
                 - name: Create project directory
                   file:
-                        path: /infra-as-code-challenge/terraform 
+                        path: /infra-as-code-challenge/ 
                         state: directory                          
 
                 - name: Create terraform directory
@@ -55,7 +62,7 @@
                           
                 - name: Copy stage folder
                   copy:
-                          src: /infra-as-code-challenge/stage
+                          src: ../stage/
                           dest: /infra-as-code-challenge/
                           directory_mode:  
 
@@ -69,7 +76,7 @@
                 
                 - name: Copy terraform provider
                   copy:
-                    src: /infra-as-code-challenge/terraform/provider.tf
+                    src: ../terraform/provider.tf
                     dest: /infra-as-code-challenge/terraform/
                     owner: root
                     group: root
@@ -77,14 +84,30 @@
 
                 - name: Copy terraform vars
                   copy:
-                    src: /infra-as-code-challenge/terraform/terraform.tfvars
+                    src: ../terraform/terraform.tfvars
                     dest: /infra-as-code-challenge/terraform/
                     owner: root
                     group: root
                     mode: '0644'
 
+                - name: Copy private key
+                  copy:
+                    src: ../resources/dokey
+                    dest: /infra-as-code-challenge/resources/
+                    owner: root
+                    group: root
+                    mode: '0600'
+
+                - name: Copy public key
+                  copy:
+                    src: ../resources/dokey.pub
+                    dest: /infra-as-code-challenge/resources/
+                    owner: root
+                    group: root
+                    mode: '0600'
+
                 - name: Add terraform to PATH
-                  script: /infra-as-code-challenge/resources/terraform-path.sh
+                  script: ../resources/terraform-path.sh
                   args: 
                         executable: /bin/bash
 
