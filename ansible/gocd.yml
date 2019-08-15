@@ -1,0 +1,30 @@
+---
+-
+        name: Create and Configure GOCD server
+        hosts: stage
+        tasks:
+                - name: Execute command 'hostname'
+                  command: hostname
+
+                - name: Execute command 'date'
+                  command: date
+
+                - name: Install git
+                  apt:
+                          name: git
+                          state: present
+
+                - name: Install ansible
+                  apt:
+                          name: ansible
+                          state: present
+                          
+                          
+                - name: Copy file with owner and permissions
+                  copy:
+                    src: /opt/terraform/terraform
+                    dest: /opt/terraform/terraform
+                    owner: root
+                    group: root
+                    mode: '0755'
+
