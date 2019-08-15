@@ -2,16 +2,31 @@
 -
         name: Configure gocd-server
         hosts: gocd-server
+        gather_facts: false
         tasks:
-                - name: Execute command 'hostname'
-                  command: hostname
+                - name: Check for python
+                  raw: test -e /usr/bin/python
+                  changed_when: false
+                  failed_when: false
+                  register: check_python
 
-                - name: Execute command 'date'
-                  command: date
+                - name: Install Python
+                  raw: apt-get install python -y
+                  when: check_python != 0
 
-                - name: Install git
+
+                - name: Add gocd repo key
+                  apt-key:
+                          url : https://download.gocd.org/GOCD-GPG-KEY.asc 
+                          state: present
+
+                - name: Update apt cache
                   apt:
-                          name: git
+                          update cache: yes
+
+                - name: Install gocd-server
+                  apt:
+                          name: go-server
                           state: present
 
                 - name: Install ansible
@@ -19,6 +34,11 @@
                           name: ansible
                           state: present
                           
+                - name: Install git
+                  apt:
+                          name: git
+                          state: present
+
                 - name: Create terraform directory
                   file:
                         path: /opt/terraform 

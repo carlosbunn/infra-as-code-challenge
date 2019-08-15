@@ -1,3 +1,4 @@
 #!/bin/bash
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook -v -i hosts gocd.yml --key-file /infra-as-code-challenge/dokey
+DIR=$(dirname "$0")
+ansible-playbook -v -i "$DIR"/hosts $"$DIR"/gocd.yml --key-file "$DIR"/../dokey
