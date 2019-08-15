@@ -1,7 +1,7 @@
 ---
 -
-        name: Create and Configure GOCD server
-        hosts: stage
+        name: Configure gocd-server
+        hosts: gocd-server
         tasks:
                 - name: Execute command 'hostname'
                   command: hostname
@@ -19,12 +19,31 @@
                           name: ansible
                           state: present
                           
+                - name: Create terraform directory
+                  file:
+                        path: /opt/terraform 
+                        state: directory                          
                           
-                - name: Copy file with owner and permissions
+                - name: Copy terraform executable
                   copy:
                     src: /opt/terraform/terraform
                     dest: /opt/terraform/terraform
                     owner: root
                     group: root
                     mode: '0755'
+                
+                - name: Copy terraform provider
+                  copy:
+                    src: /infra-as-code-challenge/terraform/provider.tf
+                    dest: /infra-as-code-challenge/terraform/
+                    owner: root
+                    group: root
+                    mode: '0644'
 
+                - name: Copy terraform vars
+                  copy:
+                    src: /infra-as-code-challenge/terraform/terraform.tfvars
+                    dest: /infra-as-code-challenge/terraform/
+                    owner: root
+                    group: root
+                    mode: '0644'
