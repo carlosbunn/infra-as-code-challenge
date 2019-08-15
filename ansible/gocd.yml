@@ -38,6 +38,11 @@
                           name: git
                           state: present
 
+                - name: Install maven
+                  apt:
+                          name: maven
+                          state: present
+
                 - name: Create project directory
                   file:
                         path: /infra-as-code-challenge/terraform 
@@ -48,6 +53,12 @@
                         path: /opt/terraform 
                         state: directory                          
                           
+                - name: Copy stage folder
+                  copy:
+                          src: /infra-as-code-challenge/stage
+                          dest: /infra-as-code-challenge/
+                          directory_mode:  
+
                 - name: Copy terraform executable
                   copy:
                     src: /opt/terraform/terraform
@@ -78,7 +89,7 @@
                         executable: /bin/bash
 
                 - name: Initialize terraform
-                  command: terraform init
+                  command: /opt/terraform/terraform init
                   args:
                         creates: /infra-as-code-challenge/terraform/.terraform/plugins/linux_amd64/lock.json
                         chdir: /infra-as-code-challenge/terraform/

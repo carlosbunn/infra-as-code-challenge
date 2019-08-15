@@ -2,7 +2,7 @@ resource "digitalocean_droplet" "stage" {
   image              = "ubuntu-18-04-x64"
   name               = "stage"
   region             = "nyc3"
-  size               = "1gb"
+  size               = "2gb"
   private_networking = true
   ssh_keys = [
     "${var.ssh_fingerprint}"
@@ -21,22 +21,31 @@ resource "digitalocean_droplet" "stage" {
   }
 
   provisioner "local-exec" {
-    command = "echo \"stage\" >> /infra-as-code-challenge/ansible/hosts"
+    command = "echo \"stage\" >> ../ansible/hosts"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "apt-get install ansible python -y",
-    ]
+  provisioner "local-exec" {
+    command = "ssh-keyscan -H stage >> ~/.ssh/known_hosts"
+  }
+
+  provisioner "local-exec" {
+    command = "./wait_stage.sh ${digitalocean_droplet.stage.ipv4_address}"
   }
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "sed -i \"/stage/d\" /infra-as-code-challenge/ansible/hosts"
+    command = "ssh-keygen -R stage"
+  }
+
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = "sed -i \"/stage/d\" ../ansible/hosts"
   }
 
   provisioner "local-exec" {
     when    = "destroy"
     command = "sed -i \"/${digitalocean_droplet.stage.ipv4_address}/d\" /etc/hosts"
   }
+
 }
+

@@ -1,0 +1,46 @@
+---
+-
+        name: Configure gocd-server
+        hosts: gocd-server
+        gather_facts: false
+        tasks:
+
+                - name: Install Python
+                  raw: apt-get install python -y
+                  args: 
+                        executable: /bin/bash
+
+                - apt_repository:
+                        repo: deb https://download.gocd.org /
+                        state: present
+
+                - name: Add gocd repo key
+                  apt_key:
+                          url: https://download.gocd.org/GOCD-GPG-KEY.asc 
+                          state: present
+
+                - name: Update apt cache
+                  apt:
+                          update_cache: yes
+
+                - name: Install gocd-agent
+                  apt:
+                          name: go-agent
+                          state: present
+
+                - name: Install git
+                  apt:
+                          name: git
+                          state: present
+
+                - name: Install maven
+                  apt:
+                          name: maven
+                          state: present
+
+                - name: Create project directory
+                  file:
+                        path: /infra-as-code-challenge/app 
+                        state: directory                          
+
+
