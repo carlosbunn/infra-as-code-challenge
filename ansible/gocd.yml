@@ -4,25 +4,24 @@
         hosts: gocd-server
         gather_facts: false
         tasks:
-                - name: Check for python
-                  raw: test -e /usr/bin/python
-                  changed_when: false
-                  failed_when: false
-                  register: check_python
 
                 - name: Install Python
                   raw: apt-get install python -y
-                  when: check_python != 0
+                  args: 
+                        executable: /bin/bash
 
+                - apt_repository:
+                        repo: deb https://download.gocd.org /
+                        state: present
 
                 - name: Add gocd repo key
-                  apt-key:
-                          url : https://download.gocd.org/GOCD-GPG-KEY.asc 
+                  apt_key:
+                          url: https://download.gocd.org/GOCD-GPG-KEY.asc 
                           state: present
 
                 - name: Update apt cache
                   apt:
-                          update cache: yes
+                          update_cache: yes
 
                 - name: Install gocd-server
                   apt:
@@ -38,6 +37,11 @@
                   apt:
                           name: git
                           state: present
+
+                - name: Create project directory
+                  file:
+                        path: /infra-as-code-challenge/terraform 
+                        state: directory                          
 
                 - name: Create terraform directory
                   file:
@@ -67,3 +71,16 @@
                     owner: root
                     group: root
                     mode: '0644'
+
+                - name: Add terraform to PATH
+                  script: /infra-as-code-challenge/resources/terraform-path.sh
+                  args: 
+                        executable: /bin/bash
+
+                - name: Initialize terraform
+                  command: terraform init
+                  args:
+                        creates: /infra-as-code-challenge/terraform/.terraform/plugins/linux_amd64/lock.json
+                        chdir: /infra-as-code-challenge/terraform/
+                              
+
