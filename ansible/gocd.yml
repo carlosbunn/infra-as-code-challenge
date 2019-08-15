@@ -117,4 +117,31 @@
                         creates: /infra-as-code-challenge/terraform/.terraform/plugins/linux_amd64/lock.json
                         chdir: /infra-as-code-challenge/terraform/
                               
+                - name: Set script as executable
+                  file:
+                          path: /infra-as-code-challenge/ansible/stage.sh
+                          owner: root
+                          group: root
+                          mode: '755'
 
+                - name: Set script as executable
+                  file:
+                          path: /infra-as-code-challenge/terraform/wait_stage.sh
+                          owner: root
+                          group: root
+                          mode: '755'
+                          
+                - name: Set script as executable
+                  file:
+                          path: /infra-as-code-challenge/terraform/provision-stage.sh
+                          owner: root
+                          group: root
+                          mode: '755'
+
+
+                - name: Set script as executable
+                  file:
+                          path: /infra-as-code-challenge/terraform/destroy-stage.sh
+                          owner: root
+                          group: root
+                          mode: '755'

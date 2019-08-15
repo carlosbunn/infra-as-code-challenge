@@ -1,7 +1,7 @@
 ---
 -
-        name: Configure gocd-server
-        hosts: gocd-server
+        name: Configure stage
+        hosts: stage
         gather_facts: false
         tasks:
 
@@ -10,9 +10,16 @@
                   args: 
                         executable: /bin/bash
 
-                - apt_repository:
-                        repo: deb https://download.gocd.org /
-                        state: present
+                - name: Fix apt
+                  command: apt clean
+
+                - name: Copy go-cd repository
+                  copy:
+                    src: /etc/apt/sources.list.d/gocd.list
+                    dest: /etc/apt/sources.list.d/gocd.list
+                    owner: root
+                    group: root
+                    mode: '0644'
 
                 - name: Add gocd repo key
                   apt_key:
@@ -42,5 +49,4 @@
                   file:
                         path: /infra-as-code-challenge/app 
                         state: directory                          
-
 
