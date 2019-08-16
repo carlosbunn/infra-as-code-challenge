@@ -1,7 +1,7 @@
 ---
 -
         name: Configure stage
-        hosts: stage
+        hosts: all
         gather_facts: false
         tasks:
 

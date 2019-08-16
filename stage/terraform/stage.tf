@@ -17,15 +17,7 @@ resource "digitalocean_droplet" "stage" {
   }
 
   provisioner "local-exec" {
-    command = "echo \"${digitalocean_droplet.stage.ipv4_address} stage \" >> /etc/hosts"
-  }
-
-  provisioner "local-exec" {
-    command = "echo \"stage\" >> ../ansible/hosts"
-  }
-
-  provisioner "local-exec" {
-    command = "ssh-keyscan -H stage >> ~/.ssh/known_hosts"
+    command = "echo \"${digitalocean_droplet.stage.ipv4_address}\" >> ../ansible/hosts"
   }
 
   provisioner "local-exec" {
@@ -34,17 +26,7 @@ resource "digitalocean_droplet" "stage" {
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "ssh-keygen -R stage"
-  }
-
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "sed -i \"/stage/d\" ../ansible/hosts"
-  }
-
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "sed -i \"/${digitalocean_droplet.stage.ipv4_address}/d\" /etc/hosts"
+    command = "sed -i \"/${digitalocean_droplet.stage.ipv4_address}/d\" ../ansible/hosts"
   }
 
 }

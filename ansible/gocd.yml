@@ -94,16 +94,16 @@
                   copy:
                     src: ../resources/dokey
                     dest: /infra-as-code-challenge/resources/
-                    owner: root
-                    group: root
+                    owner: go
+                    group: go
                     mode: '0600'
 
                 - name: Copy public key
                   copy:
                     src: ../resources/dokey.pub
                     dest: /infra-as-code-challenge/resources/
-                    owner: root
-                    group: root
+                    owner: go
+                    group: go
                     mode: '0600'
 
                 - name: Add terraform to PATH
@@ -145,3 +145,19 @@
                           owner: root
                           group: root
                           mode: '755'
+
+                - name: add go user to sudoers
+                  user:
+                        name: go
+                        shell: /bin/bash
+                        groups: sudo
+                        append: yes
+
+                - name: Permit sudo for go user
+                  lineinfile:
+                          path: /etc/sudoers
+                          state: present
+                          regexp: '^%sudo'
+                          line: '%sudo   ALL=(ALL) NOPASSWD:ALL'
+                          validate: /usr/sbin/visudo -cf %s
+
